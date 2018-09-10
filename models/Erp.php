@@ -177,7 +177,7 @@ class Erp
     {
         return $this->getQueryModel()
             ->select('erp_oms.tracking_nr,erp_oms.receivables, 
-            erp_receipts.cod_received, (erp_oms.receivables - erp_receipts.cod_received),
+            erp_receipts.cod_received, (erp_oms.receivables - erp_receipts.cod_received) as outstanding_amount,
             erp_receipts.deposit_date,erp_delivery_company.name as company, 
             erp_oms.order_nr,erp_delivery_company_city.name,
             erp_oms.delivered_date')
