@@ -180,7 +180,7 @@ class Erp
             erp_receipts.cod_received, (erp_oms.receivables - erp_receipts.cod_received) as outstanding_amount,
             erp_receipts.deposit_date,erp_delivery_company.name as company, 
             erp_oms.order_nr,erp_delivery_company_city.name,
-            erp_oms.delivered_date')
+            erp_oms.delivered_date, erp_oms.package_nr')
             ->from('erp_receipts')
             ->innerJoin('erp_oms', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
             ->innerJoin('erp_delivery_company', 'erp_delivery_company.
@@ -395,7 +395,9 @@ class Erp
             $headerElement['order'],
             $headerElement['city'],
             $headerElement['delivery_date'],
-            $headerElement['days'],
+            $headerElement['package_nr'],
+            $headerElement['payment_days'],
+            $headerElement['days']
         ]);
     }
 
@@ -424,9 +426,15 @@ class Erp
     public function createDetailAgingReport($fileName, $detailAgingReportData)
     {
         foreach ($detailAgingReportData as $key => $value) {
-            $date1 = date_create($value['delivered_date']);
-            $date2 = date_create(date('Y-m-d'));
-            $dateDiff  = date_diff($date1, $date2);
+            $dateDiffPaymentDays = date_diff(
+                date_create($value['delivered_date']),
+                date_create($value['deposit_date'])
+            );
+            $dateDiff  = date_diff(
+                date_create($value['delivered_date']),
+                date_create(date('Y-m-d'))
+            );
+            array_push($value, $dateDiffPaymentDays->format("%R%a"));
             array_push($value, $dateDiff->format("%R%a"));
             try {
                 fputcsv($fileName, $value);

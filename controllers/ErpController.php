@@ -200,6 +200,8 @@ class ErpController extends Controller
                     'order' => 'Order Number',
                     'city' => 'City Name',
                     'delivery_date' => 'Delivery Date',
+                    'package_nr' => 'Package Number',
+                    'payment_days' => 'Payment Days',
                     'days' => 'Reporting Days'
                 ]);
 
