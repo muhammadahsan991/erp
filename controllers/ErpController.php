@@ -202,7 +202,8 @@ class ErpController extends Controller
                     'delivery_date' => 'Delivery Date',
                     'package_nr' => 'Package Number',
                     'payment_days' => 'Payment Days',
-                    'days' => 'Reporting Days'
+                    'days' => 'Reporting Days',
+                    'week_wise' => 'Week Wise Outstanding'
                 ]);
 
                 //Creating Detail Aging Report For Outstanding Amount

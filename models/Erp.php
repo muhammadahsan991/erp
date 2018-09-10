@@ -397,7 +397,8 @@ class Erp
             $headerElement['delivery_date'],
             $headerElement['package_nr'],
             $headerElement['payment_days'],
-            $headerElement['days']
+            $headerElement['days'],
+            $headerElement['week_wise']
         ]);
     }
 
@@ -436,6 +437,7 @@ class Erp
             );
             array_push($value, $dateDiffPaymentDays->format("%R%a"));
             array_push($value, $dateDiff->format("%R%a"));
+            array_push($value, $this->getWeekOfMonth($value['delivered_date']));
             try {
                 fputcsv($fileName, $value);
             } catch (Exception $e) {
@@ -635,5 +637,23 @@ class Erp
     protected function getQueryModel()
     {
         return new query();
+    }
+
+    /**
+     * @param $date
+     *
+     * @return string
+     */
+    protected function getWeekOfMonth($date)
+    {
+        list($y, $m, $d) = explode('-', date('Y-m-d', strtotime($date)));
+        $w = 1;
+        for ($i = 1; $i <= $d; ++$i) {
+            if ($i > 1 && date('w', strtotime("$y-$m-$i")) == 0) {
+                ++$w;
+            }
+        }
+
+        return $w." week of ".date('F', strtotime($date));
     }
 }
