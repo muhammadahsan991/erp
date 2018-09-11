@@ -112,12 +112,12 @@ class ErpController extends Controller
             if (file_exists($erpReportFileName)) {
                 $erpModel->createAgingReportCsvFileHeader($file, [
                     'Delivery Company' => 'Company',
-                    '1-8' => '8 Days '.$eightDays . '-' . $currentDate,
-                    '9-15' => '6 Days '.$sixDays . '-' . $startDateSixDaysReport,
-                    '16-30' => '15 Days '.$thirtyDays . '-' . $startDateThirtyDaysReport,
-                    '31-90' => '60 Days '.$sixtyDays . '-' . $startDateSixtyDaysReport,
-                    '91-180' => '90 Days '.$ninetyDays . '-' . $startDateNinetyDaysReport,
-                    '181-365' => '180 Days '.$hundredEightyDays . '-' . $startDateOneEightyDaysReport,
+                    '1-8' => '8 Days ('.$eightDays . '-' . $currentDate.')',
+                    '9-15' => '6 Days ('.$sixDays . '-' . $startDateSixDaysReport.')',
+                    '16-30' => '15 Days ('.$thirtyDays . '-' . $startDateThirtyDaysReport.')',
+                    '31-90' => '60 Days ('.$sixtyDays . '-' . $startDateSixtyDaysReport.')',
+                    '91-180' => '90 Days ('.$ninetyDays . '-' . $startDateNinetyDaysReport.')',
+                    '181-365' => '180 Days ('.$hundredEightyDays . '-' . $startDateOneEightyDaysReport.')',
                     'Outstanding' => 'Outstanding Amount'
                 ]);
 
@@ -284,9 +284,9 @@ class ErpController extends Controller
             if (file_exists($agingReportInternalFileName)) {
                 $erpModel->createAgingReportInternalCsvFileHeader($agingReportFileInternal, [
                     'Delivery Company' => 'Company',
-                    '1-60' => '60 Days '.$sixtyDaysInternal.'-'.$currentDate,
-                    '61-180' => '120 Days '.$oneTwentyDaysInternal.'-'.$startDateSixtyDaysReportInternal,
-                    '181-365' => '180 Days '.$previousYear.'-'.$startDateOneEightyDaysReportInternal,
+                    '1-60' => '60 Days ('.$sixtyDaysInternal.'-'.$currentDate.')',
+                    '61-180' => '120 Days ('.$oneTwentyDaysInternal.'-'.$startDateSixtyDaysReportInternal.')',
+                    '181-365' => '180 Days ('.$previousYear.'-'.$startDateOneEightyDaysReportInternal.')',
                     'more365' => '> 365 Days',
                     'Outstanding' => 'Outstanding Amount'
                 ]);
