@@ -20,11 +20,11 @@ class Erp
         $this->FILE_PERMISSIONS = 0777;
         $this->ONE_DAY = 1;
         $this->SIX_DAYS = 6;
-        $this->EIGHT_DAYS = 8;
-        $this->FIFTEEN_DAYS = 15;
-        $this->SIXTY_DAYS = 60;
-        $this->NINETY_DAYS = 90;
-        $this->ONE_TWENTY_DAYS = 120;
+        $this->EIGHT_DAYS = 7;
+        $this->FIFTEEN_DAYS = 14;
+        $this->SIXTY_DAYS = 59;
+        $this->NINETY_DAYS = 89;
+        $this->ONE_TWENTY_DAYS = 119;
         $this->PREVIOUS_ONE_YEAR = 1;
         $this->ERP_REPORT = "erpReport.csv";
         $this->DETAIL_AGING_REPORT = "detailAgingReport.csv";
