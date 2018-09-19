@@ -17,9 +17,7 @@ class ErpController extends Controller
         $erpModel = new Erp();
 
         //For Eight Days Aging Report
-        //$currentDate = date("Y-m-d");
-        $currentDate = "2018-09-11";
-
+        $currentDate = date("Y-m-d");
 
         $eightDays   = $erpModel->getPreviousDays($currentDate, $erpModel->EIGHT_DAYS);
 
