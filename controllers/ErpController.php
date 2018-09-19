@@ -41,6 +41,11 @@ class ErpController extends Controller
         $startDateOneEightyDaysReport = $erpModel->getPreviousDays($ninetyDays, $erpModel->ONE_DAY);
         $hundredEightyDays = $erpModel->getPreviousYear($currentDate, $erpModel->ONE_DAY);
 
+        $previousYear = $erpModel->getPreviousYear($currentDate, $erpModel->PREVIOUS_ONE_YEAR);
+
+        //For days above one year
+        $greaterThanThreeSixFive = $erpModel->getPreviousDays($previousYear, $erpModel->ONE_DAY);
+
         //8 Days Aging Report Outstanding Amount
         $erpReportEight = $erpModel->getAgingReport($eightDays, $currentDate, 'a');
 
@@ -79,13 +84,20 @@ class ErpController extends Controller
             'f'
         );
 
+        //Older than 365 Days Aging Report Outstanding Amount
+        $erpReportOlderThanYear = $erpModel->getOldAgingReport(
+            $greaterThanThreeSixFive,
+            'g'
+        );
+
         $agingReport = array_merge_recursive(
             $erpReportEight,
             $erpReportNextEight,
             $erpReportFifteen,
             $erpReportSixty,
             $erpReportNinety,
-            $erpReportOneEighty
+            $erpReportOneEighty,
+            $erpReportOlderThanYear
         );
 
         //Create Separate Folder for all dates
@@ -118,6 +130,7 @@ class ErpController extends Controller
                     '31-90' => '60 Days ('.$sixtyDays . '-' . $startDateSixtyDaysReport.')',
                     '91-180' => '90 Days ('.$ninetyDays . '-' . $startDateNinetyDaysReport.')',
                     '181-365' => '180 Days ('.$hundredEightyDays . '-' . $startDateOneEightyDaysReport.')',
+                    'more365' => '> 365 Days',
                     'Outstanding' => 'Outstanding Amount'
                 ]);
 
@@ -226,7 +239,6 @@ class ErpController extends Controller
 
         //For previous Days to current date previous year
         $startDateOneEightyDaysReportInternal = $erpModel->getPreviousDays($oneTwentyDaysInternal, $erpModel->ONE_DAY);
-        $previousYear = $erpModel->getPreviousYear($currentDate, $erpModel->PREVIOUS_ONE_YEAR);
 
         //For days above one year
         $oldDate = $erpModel->getPreviousDays($previousYear, $erpModel->ONE_DAY);

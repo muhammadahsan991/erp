@@ -239,6 +239,7 @@ class Erp
             $headerElement['31-90'],
             $headerElement['91-180'],
             $headerElement['181-365'],
+            $headerElement['more365'],
             $headerElement['Outstanding']
         ]);
     }
@@ -288,8 +289,13 @@ class Erp
                 $value['f'] = 0;
             }
 
+            //Greater Than 180 Days Report
+            if (!isset($value['g'])) {
+                $value['g'] = 0;
+            }
+
             $totalOutstanding = $value['a'] + $value['b'] + $value['c'] + $value['d'] +
-                $value['e'] + $value['f'];
+                $value['e'] + $value['f'] + $value['g'];
             unset($value['name']);
             array_unshift($value, $name);
             array_push($value, $totalOutstanding);
