@@ -125,7 +125,7 @@ class ErpController extends Controller
                 $erpModel->createAgingReportCsvFileHeader($file, [
                     'Delivery Company' => 'Company',
                     '1-8' => '8 Days ('.$eightDays . '-' . $currentDate.')',
-                    '9-15' => '6 Days ('.$sixDays . '-' . $startDateSixDaysReport.')',
+                    '9-15' => '7 Days ('.$sixDays . '-' . $startDateSixDaysReport.')',
                     '16-30' => '15 Days ('.$thirtyDays . '-' . $startDateThirtyDaysReport.')',
                     '31-90' => '60 Days ('.$sixtyDays . '-' . $startDateSixtyDaysReport.')',
                     '91-180' => '90 Days ('.$ninetyDays . '-' . $startDateNinetyDaysReport.')',
