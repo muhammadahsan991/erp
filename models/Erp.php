@@ -16,6 +16,9 @@ class Erp
         $this->STATUS_INACTIVE = 0;
         $this->STATUS_ACTIVE = 1;
         $this->STATUS_OVERPAID = 2;
+        $this->ERP_RECEIPTS_DATA_INSERTION = '0';
+        $this->ERP_OMS_DATA_INSERTION = '1';
+        $this->ERP_REPORT_GENERATION = '2';
         $this->ERROR_FILE = "error-".date("Y-m-d").".txt";
         $this->FILE_PERMISSIONS = 0777;
         $this->ONE_DAY = 1;
@@ -494,8 +497,8 @@ class Erp
     {
         $erpCronLogModel = $this->getErpCronLogModel();
         $erpCronLogModel->message = $message;
-        $erpCronLogModel->created_at = date('Y-m-d H:i:s');
-        $erpCronLogModel->updated_at = date('Y-m-d H:i:s');
+        $erpCronLogModel->created_at = date('Y-m-d');
+        $erpCronLogModel->updated_at = date('Y-m-d');
 
         if ($erpCronLogModel->save()) {
             return true;
@@ -662,5 +665,24 @@ class Erp
         }
 
         return $w." week of ".date('F', strtotime($date));
+    }
+
+    /**
+     * @param $currentDate
+     * @param $messageId
+     *
+     * @return bool
+     */
+    public function checkErpDataInserted($currentDate, $messageId)
+    {
+        if ($this->getErpCronLogModel()->find()
+            ->where(['created_at' => $currentDate])
+            ->andWhere(['message' => $messageId])
+            ->one()) {
+
+            return true;
+        }
+
+        return false;
     }
 }
