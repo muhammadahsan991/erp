@@ -658,9 +658,9 @@ class Erp
     {
         list($y, $m, $d) = explode('-', date('Y-m-d', strtotime($date)));
         $w = 1;
-        for ($i = 1; $i <= $d; ++$i) {
+        for ($i = 1; $i <= $d; $i++) {
             if ($i > 1 && date('w', strtotime("$y-$m-$i")) == 0) {
-                ++$w;
+                $w++;
             }
         }
 
