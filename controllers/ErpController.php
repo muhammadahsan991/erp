@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 ini_set("max_execution_time", 0);
-ini_set('memory_limit', '2048M');
+ini_set('memory_limit', '-1');
 
 use Yii;
 use yii\db\Exception;
