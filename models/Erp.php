@@ -384,7 +384,8 @@ class Erp
      */
     public function getPreviousYear($date, $previousYear)
     {
-        return date('Y-m-d', strtotime('-'.$previousYear.' year', strtotime($date)));
+        $previousYearDate = date('Y-m-d', strtotime('-'.$previousYear.' year', strtotime($date)));
+        return date('Y-m-d', strtotime('-'.$this->ONE_DAY.' day', strtotime($previousYearDate)));
     }
 
     /**
