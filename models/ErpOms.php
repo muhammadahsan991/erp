@@ -38,8 +38,8 @@ class ErpOms extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['tracking_nr', 'fk_delivery_company', 'shipped_date', 'delivered_date', 'receivables'], 'required'],
             [['tracking_nr', 'order_nr', 'fk_delivery_company', 'status'], 'integer'],
-            [['order_nr', 'package_nr', 'fk_delivery_company', 'shipped_date', 'delivered_date', 'receivables'], 'required'],
             [['shipped_date', 'delivered_date', 'created_at', 'updated_at'], 'safe'],
             [['receivables'], 'number'],
             [['package_nr'], 'string', 'max' => 255],
