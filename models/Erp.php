@@ -149,9 +149,10 @@ class Erp
      */
     public function getAgingReport($deliveredDate, $previousDate, $dataKey)
     {
-        $subQuery = $this->getQueryModel()
+        return $this->getQueryModel()
             ->select('erp_delivery_company.name as name,
-            (erp_oms.receivables - sum(erp_receipts.cod_received)) as '.$dataKey)
+            erp_oms.receivables, erp_receipts.cod_received,
+            (erp_oms.receivables - erp_receipts.cod_received) as '.$dataKey)
             ->from('erp_oms')
             ->leftJoin('erp_receipts', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
             ->innerJoin('erp_delivery_company', 'erp_delivery_company.
@@ -161,14 +162,7 @@ class Erp
             ->where('erp_oms.status=:status', [':status' => $this->STATUS_ACTIVE])
             ->andWhere(['between', 'erp_oms.delivered_date', $deliveredDate, $previousDate])
             ->groupBy('erp_oms.tracking_nr')
-            ->orderBy('erp_delivery_company.name ASC');
-
-        return $this->getQueryModel()
-            ->select('report.name as name, sum(report.'.$dataKey.') as '.$dataKey)
-            ->from(['report' => $subQuery])
-            ->groupBy('name')
-            ->indexBy('name')
-            ->all();
+            ->orderBy('erp_delivery_company.name ASC')->all();
     }
 
     /**
@@ -204,9 +198,10 @@ class Erp
      */
     public function getOldAgingReport($date, $dataKey)
     {
-        $subQuery = $this->getQueryModel()
+        return $this->getQueryModel()
             ->select('erp_delivery_company.name as name,
-            (erp_oms.receivables - sum(erp_receipts.cod_received)) as '.$dataKey)
+            erp_oms.receivables, erp_receipts.cod_received,
+            (erp_oms.receivables - erp_receipts.cod_received) as '.$dataKey)
             ->from('erp_oms')
             ->leftJoin('erp_receipts', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
             ->innerJoin('erp_delivery_company', 'erp_delivery_company.
@@ -216,14 +211,7 @@ class Erp
             ->where('erp_oms.status=:status', [':status' => $this->STATUS_ACTIVE])
             ->andWhere('erp_oms.delivered_date <=:date', [':date' => $date])
             ->groupBy('erp_oms.tracking_nr')
-            ->orderBy('erp_delivery_company.name ASC');
-
-        return $this->getQueryModel()
-            ->select('report.name as name, sum(report.'.$dataKey.') as '.$dataKey)
-            ->from(['report' => $subQuery])
-            ->groupBy('name')
-            ->indexBy('name')
-            ->all();
+            ->orderBy('erp_delivery_company.name ASC')->all();
     }
 
     /**
@@ -256,10 +244,10 @@ class Erp
         $name = null;
 
         foreach ($agingReportData as $key => $value) {
-            if (is_array($value['name'])) {
-                $name = $value['name'][0];
+            if (is_array($value)) {
+                $name = $value[0];
             } else {
-                $name = $value['name'];
+                $name = $value;
             }
 
             //Eight Days Report
@@ -701,5 +689,41 @@ class Erp
         }
 
         return $reportData;
+    }
+
+    /**
+     * @param $reportData
+     *
+     * @return array
+     */
+    public function setOutstandingAmount($reportData, $dataKey)
+    {
+        foreach ($reportData as $key => $data) {
+            if ($reportData[$key]['cod_received'] === null) {
+                $reportData[$key]['cod_received'] = 0;
+                $reportData[$key][$dataKey] = $reportData[$key]['receivables'] -
+                    $reportData[$key]['cod_received'];
+            }
+        }
+
+        $result = [];
+        foreach ($reportData as $v) {
+            if (!isset($result[$v["name"]])) {
+                $result[$v["name"]]["name"] = $v["name"];
+                $result[$v["name"]][$dataKey] = $v[$dataKey];
+            } else {
+                $result[$v["name"]][$dataKey] += $v[$dataKey];
+            }
+        }
+
+        $result = array_values($result);
+
+        if (count($result) > 0) {
+            foreach ($result as $data) {
+                return $data;
+            }
+        }
+
+        return $result;
     }
 }

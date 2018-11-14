@@ -53,6 +53,7 @@ class ErpController extends Controller
 
             //8 Days Aging Report Outstanding Amount
             $erpReportEight = $erpModel->getAgingReport($eightDays, $currentDate, 'a');
+            $erpReportEight = $erpModel->setOutstandingAmount($erpReportEight, 'a');
 
             //Next 6 Days Aging Report Outstanding Amount
             $erpReportNextEight = $erpModel->getAgingReport(
@@ -60,6 +61,7 @@ class ErpController extends Controller
                 $startDateSixDaysReport,
                 'b'
             );
+            $erpReportNextEight = $erpModel->setOutstandingAmount($erpReportNextEight, 'b');
 
             //Next 15 Days Aging Report Outstanding Amount
             $erpReportFifteen = $erpModel->getAgingReport(
@@ -67,6 +69,7 @@ class ErpController extends Controller
                 $startDateThirtyDaysReport,
                 'c'
             );
+            $erpReportFifteen = $erpModel->setOutstandingAmount($erpReportFifteen, 'c');
 
             //Next 60 Days Aging Report Outstanding Amount
             $erpReportSixty = $erpModel->getAgingReport(
@@ -74,6 +77,7 @@ class ErpController extends Controller
                 $startDateSixtyDaysReport,
                 'd'
             );
+            $erpReportSixty = $erpModel->setOutstandingAmount($erpReportSixty, 'd');
 
             //Next 90 Days Aging Report Outstanding Amount
             $erpReportNinety = $erpModel->getAgingReport(
@@ -82,18 +86,22 @@ class ErpController extends Controller
                 'e'
             );
 
+            $erpReportNinety = $erpModel->setOutstandingAmount($erpReportNinety, 'e');
+
             //Next 180 Days Aging Report Outstanding Amount
             $erpReportOneEighty = $erpModel->getAgingReport(
                 $hundredEightyDays,
                 $startDateOneEightyDaysReport,
                 'f'
             );
+            $erpReportOneEighty = $erpModel->setOutstandingAmount($erpReportOneEighty, 'f');
 
             //Older than 365 Days Aging Report Outstanding Amount
             $erpReportOlderThanYear = $erpModel->getOldAgingReport(
                 $greaterThanThreeSixFive,
                 'g'
             );
+            $erpReportOlderThanYear = $erpModel->setOutstandingAmount($erpReportOlderThanYear, 'g');
 
             $agingReport = array_merge_recursive(
                 $erpReportEight,
