@@ -268,6 +268,8 @@ class ErpController extends Controller
                 'a'
             );
 
+            $erpReportSixtyInternal = $erpModel->setOutstandingAmount($erpReportSixtyInternal, 'a');
+
             //120 Days Internal Aging Report
             $erpReportOneHundredTwentyInternal = $erpModel->getAgingReport(
                 $oneTwentyDaysInternal,
@@ -275,16 +277,22 @@ class ErpController extends Controller
                 'b'
             );
 
+            $erpReportOneHundredTwentyInternal = $erpModel->setOutstandingAmount($erpReportOneHundredTwentyInternal, 'b');
+
             $erpReportOneHundredEightyInternal = $erpModel->getAgingReport(
                 $previousYear,
                 $startDateOneEightyDaysReportInternal,
                 'c'
             );
 
+            $erpReportOneHundredEightyInternal = $erpModel->setOutstandingAmount($erpReportOneHundredEightyInternal, 'c');
+
             $erpReportOldInternal = $erpModel->getOldAgingReport(
                 $oldDate,
                 'd'
             );
+
+            $erpReportOldInternal = $erpModel->setOutstandingAmount($erpReportOldInternal, 'd');
 
             $agingReportInternal = array_merge_recursive(
                 $erpReportSixtyInternal,

@@ -241,65 +241,59 @@ class Erp
      */
     public function createAgingReportCsvFile($fileName, $agingReportData)
     {
-        $name = null;
-
-        foreach ($agingReportData as $key => $value) {
-            if (is_array($value)) {
-                $name = $value[0];
-            } else {
-                $name = $value;
-            }
-
-            //Eight Days Report
-            if (!isset($value['a'])) {
-                $value['a'] = 0;
-            }
-
-            //Next 6 Days Report
-            if (!isset($value['b'])) {
-                $value['b'] = 0;
-            }
-
-            //Next 15 Days Report
-            if (!isset($value['c'])) {
-                $value['c'] = 0;
-            }
-
-            //Next 60 Days Report
-            if (!isset($value['d'])) {
-                $value['d'] = 0;
-            }
-
-            //Next 90 Days Report
-            if (!isset($value['e'])) {
-                $value['e'] = 0;
-            }
-
-            //Next 180 Days Report
-            if (!isset($value['f'])) {
-                $value['f'] = 0;
-            }
-
-            //Greater Than 180 Days Report
-            if (!isset($value['g'])) {
-                $value['g'] = 0;
-            }
-
-            $totalOutstanding = $value['a'] + $value['b'] + $value['c'] + $value['d'] +
-                $value['e'] + $value['f'] + $value['g'];
-            unset($value['name']);
-            array_unshift($value, $name);
-            array_push($value, $totalOutstanding);
-            ksort($value);
-            try {
-                fputcsv($fileName, $value);
-            } catch (Exception $e) {
-                $this->createLogFile(
-                    $this->ERROR_FILE,
-                    $value." not inserted ".$e->getMessage()."\n"
-                );
-            }
+        if (is_array($agingReportData['name'])) {
+            $agingReportData[-1] = $agingReportData['name'][0];
+            unset($agingReportData['name']);
         }
+
+        //Eight Days Report
+        if (!isset($agingReportData['a'])) {
+            $agingReportData['a'] = 0;
+        }
+
+        //Next 6 Days Report
+        if (!isset($agingReportData['b'])) {
+            $agingReportData['b'] = 0;
+        }
+
+        //Next 15 Days Report
+        if (!isset($agingReportData['c'])) {
+            $agingReportData['c'] = 0;
+        }
+
+        //Next 60 Days Report
+        if (!isset($agingReportData['d'])) {
+            $agingReportData['d'] = 0;
+        }
+
+        //Next 90 Days Report
+        if (!isset($agingReportData['e'])) {
+            $agingReportData['e'] = 0;
+        }
+
+        //Next 180 Days Report
+        if (!isset($agingReportData['f'])) {
+            $agingReportData['f'] = 0;
+        }
+
+        //Greater Than 180 Days Report
+        if (!isset($agingReportData['g'])) {
+            $agingReportData['g'] = 0;
+        }
+
+        $totalOutstanding = $agingReportData['a'] + $agingReportData['b'] + $agingReportData['c'] +
+            $agingReportData['d'] + $agingReportData['e'] + $agingReportData['f'] + $agingReportData['g'];
+        array_push($agingReportData, $totalOutstanding);
+        ksort($agingReportData);
+        try {
+            fputcsv($fileName, $agingReportData);
+        } catch (Exception $e) {
+            $this->createLogFile(
+                $this->ERROR_FILE,
+                $agingReportData." not inserted ".$e->getMessage()."\n"
+            );
+        }
+
     }
 
     /**
@@ -308,48 +302,42 @@ class Erp
      */
     public function createAgingReportCsvFileInternal($fileName, $agingReportData)
     {
-        $name = null;
+        if (is_array($agingReportData['name'])) {
+            $agingReportData[-1] = $agingReportData['name'][0];
+            unset($agingReportData['name']);
+        }
 
-        foreach ($agingReportData as $key => $value) {
-            if (is_array($value['name'])) {
-                $name = $value['name'][0];
-            } else {
-                $name = $value['name'];
-            }
+        //60 Days Erp Report Internal
+        if (!isset($agingReportData['a'])) {
+            $agingReportData['a'] = 0;
+        }
 
-            //60 Days Erp Report Internal
-            if (!isset($value['a'])) {
-                $value['a'] = 0;
-            }
+        //120 Days Erp Report Internal
+        if (!isset($agingReportData['b'])) {
+            $agingReportData['b'] = 0;
+        }
 
-            //120 Days Erp Report Internal
-            if (!isset($value['b'])) {
-                $value['b'] = 0;
-            }
+        //180 Days Erp Report Internal
+        if (!isset($agingReportData['c'])) {
+            $agingReportData['c'] = 0;
+        }
 
-            //180 Days Erp Report Internal
-            if (!isset($value['c'])) {
-                $value['c'] = 0;
-            }
+        //Greater Than 180 Days Erp Report Internal
+        if (!isset($agingReportData['d'])) {
+            $agingReportData['d'] = 0;
+        }
 
-            //Greater Than 180 Days Erp Report Internal
-            if (!isset($value['d'])) {
-                $value['d'] = 0;
-            }
-
-            $totalOutstanding = $value['a'] + $value['b'] + $value['c'] + $value['d'];
-            unset($value['name']);
-            array_unshift($value, $name);
-            array_push($value, $totalOutstanding);
-            ksort($value);
-            try {
-                fputcsv($fileName, $value);
-            } catch (Exception $e) {
-                $this->createLogFile(
-                    $this->ERROR_FILE,
-                    $value." not inserted ".$e->getMessage()."\n"
-                );
-            }
+        $totalOutstanding = $agingReportData['a'] + $agingReportData['b'] + $agingReportData['c'] +
+            $agingReportData['d'];
+        array_push($agingReportData, $totalOutstanding);
+        ksort($agingReportData);
+        try {
+            fputcsv($fileName, $agingReportData);
+        } catch (Exception $e) {
+            $this->createLogFile(
+                $this->ERROR_FILE,
+                $agingReportData." not inserted ".$e->getMessage()."\n"
+            );
         }
     }
 
