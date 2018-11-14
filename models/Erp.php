@@ -153,7 +153,7 @@ class Erp
             ->select('erp_delivery_company.name as name,
             (erp_oms.receivables - sum(erp_receipts.cod_received)) as '.$dataKey)
             ->from('erp_oms')
-            ->innerJoin('erp_receipts', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
+            ->leftJoin('erp_receipts', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
             ->innerJoin('erp_delivery_company', 'erp_delivery_company.
             id_erp_delivery_company=erp_oms.fk_delivery_company')
             ->innerJoin('erp_delivery_company_city', 'erp_delivery_company_city.
@@ -186,7 +186,7 @@ class Erp
             erp_oms.order_nr,erp_delivery_company_city.name,
             erp_oms.delivered_date, erp_oms.package_nr')
             ->from('erp_receipts')
-            ->innerJoin('erp_oms', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
+            ->rightJoin('erp_oms', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
             ->innerJoin('erp_delivery_company', 'erp_delivery_company.
             id_erp_delivery_company=erp_oms.fk_delivery_company')
             ->innerJoin('erp_delivery_company_city', 'erp_delivery_company_city.
@@ -208,7 +208,7 @@ class Erp
             ->select('erp_delivery_company.name as name,
             (erp_oms.receivables - sum(erp_receipts.cod_received)) as '.$dataKey)
             ->from('erp_oms')
-            ->innerJoin('erp_receipts', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
+            ->leftJoin('erp_receipts', 'erp_oms.tracking_nr = erp_receipts.tracking_nr')
             ->innerJoin('erp_delivery_company', 'erp_delivery_company.
             id_erp_delivery_company=erp_oms.fk_delivery_company')
             ->innerJoin('erp_delivery_company_city', 'erp_delivery_company_city.
@@ -685,5 +685,21 @@ class Erp
         }
 
         return false;
+    }
+
+    /**
+     * @param $reportData
+     *
+     * @return array
+     */
+    public function setOutstandingAmountEqualToReceivables($reportData)
+    {
+        foreach ($reportData as $key => $data) {
+            if ($reportData[$key]['outstanding_amount'] === null) {
+                $reportData[$key]['outstanding_amount'] = $reportData[$key]['receivables'];
+            }
+        }
+
+        return $reportData;
     }
 }

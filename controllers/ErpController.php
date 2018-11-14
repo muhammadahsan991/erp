@@ -189,6 +189,8 @@ class ErpController extends Controller
                 $erpDetailReportOneEighty
             );
 
+            $detailAgingReport = $erpModel->setOutstandingAmountEqualToReceivables($detailAgingReport);
+
             //Creating Detail Aging Report For Outstanding Amount
             if (count($detailAgingReport) > 0) {
                 $detailAgingReportFile = null;
