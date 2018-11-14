@@ -277,7 +277,10 @@ class ErpController extends Controller
                 'b'
             );
 
-            $erpReportOneHundredTwentyInternal = $erpModel->setOutstandingAmount($erpReportOneHundredTwentyInternal, 'b');
+            $erpReportOneHundredTwentyInternal = $erpModel->setOutstandingAmount(
+                $erpReportOneHundredTwentyInternal,
+                'b'
+            );
 
             $erpReportOneHundredEightyInternal = $erpModel->getAgingReport(
                 $previousYear,
@@ -285,7 +288,10 @@ class ErpController extends Controller
                 'c'
             );
 
-            $erpReportOneHundredEightyInternal = $erpModel->setOutstandingAmount($erpReportOneHundredEightyInternal, 'c');
+            $erpReportOneHundredEightyInternal = $erpModel->setOutstandingAmount(
+                $erpReportOneHundredEightyInternal,
+                'c'
+            );
 
             $erpReportOldInternal = $erpModel->getOldAgingReport(
                 $oldDate,
