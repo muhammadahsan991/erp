@@ -701,7 +701,9 @@ class Erp
                 $result[$v["name"]]["name"] = $v["name"];
                 $result[$v["name"]][$dataKey] = $v[$dataKey];
             } else {
-                $result[$v["name"]][$dataKey] += $v[$dataKey];
+                if ($v[$dataKey] > 0) {
+                    $result[$v["name"]][$dataKey] += $v[$dataKey];
+                }
             }
         }
 
