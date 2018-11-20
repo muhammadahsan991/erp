@@ -75,14 +75,14 @@ class Erp
                     try {
                         if (count($data) > 0) {
                             $erpOmsModel = $this->getErpOmsModel();
-                            $erpOmsModel->tracking_nr = $data[0];
-                            $erpOmsModel->order_nr = $data[1];
-                            $erpOmsModel->package_nr = $data[2];
-                            $erpOmsModel->fk_delivery_company = $data[3];
-                            $erpOmsModel->return_reasons = $data[4];
-                            $erpOmsModel->shipped_date = $data[5];
-                            $erpOmsModel->delivered_date = $data[6];
-                            $erpOmsModel->receivables = $data[7];
+                            $erpOmsModel->tracking_nr = trim($data[0]);
+                            $erpOmsModel->order_nr = trim($data[1]);
+                            $erpOmsModel->package_nr = trim($data[2]);
+                            $erpOmsModel->fk_delivery_company = trim($data[3]);
+                            $erpOmsModel->return_reasons = trim($data[4]);
+                            $erpOmsModel->shipped_date = trim($data[5]);
+                            $erpOmsModel->delivered_date = trim($data[6]);
+                            $erpOmsModel->receivables = trim($data[7]);
                             $erpOmsModel->created_at = date('Y-m-d H:i:s');
                             $erpOmsModel->updated_at = date('Y-m-d H:i:s');
                             $erpOmsModel->status = $this->STATUS_ACTIVE;
@@ -118,10 +118,10 @@ class Erp
                 try {
                     if (count($erpReceiptsData) > 0) {
                         $erpReceiptsModel = $this->getErpReceiptsModel();
-                        $erpReceiptsModel->tracking_nr = $erpReceiptsData[0];
-                        $erpReceiptsModel->cod_received = $erpReceiptsData[1];
-                        $erpReceiptsModel->chq_nr = $erpReceiptsData[2];
-                        $erpReceiptsModel->deposit_date = $erpReceiptsData[3];
+                        $erpReceiptsModel->tracking_nr = trim($erpReceiptsData[0]);
+                        $erpReceiptsModel->cod_received = trim($erpReceiptsData[1]);
+                        $erpReceiptsModel->chq_nr = trim($erpReceiptsData[2]);
+                        $erpReceiptsModel->deposit_date = trim($erpReceiptsData[3]);
                         $erpReceiptsModel->created_at = date('Y-m-d H:i:s');
                         $erpReceiptsModel->updated_at = date('Y-m-d H:i:s');
                         $erpReceiptsModel->save();
