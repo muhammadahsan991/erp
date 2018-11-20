@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "{{%erp_oms}}".
  *
  * @property int $id_erp_oms
- * @property int $tracking_nr
+ * @property string $tracking_nr
  * @property int $order_nr
  * @property string $package_nr
  * @property int $fk_delivery_company
@@ -39,10 +39,10 @@ class ErpOms extends \yii\db\ActiveRecord
     {
         return [
             [['tracking_nr', 'fk_delivery_company', 'shipped_date', 'delivered_date', 'receivables'], 'required'],
-            [['tracking_nr', 'order_nr', 'fk_delivery_company', 'status'], 'integer'],
+            [['order_nr', 'fk_delivery_company', 'status'], 'integer'],
             [['shipped_date', 'delivered_date', 'created_at', 'updated_at'], 'safe'],
             [['receivables'], 'number'],
-            [['package_nr'], 'string', 'max' => 255],
+            [['tracking_nr', 'package_nr'], 'string', 'max' => 255],
             [['return_reasons'], 'string', 'max' => 1024],
             [['fk_delivery_company'], 'exist', 'skipOnError' => true, 'targetClass' => ErpDeliveryCompany::className(), 'targetAttribute' => ['fk_delivery_company' => 'id_erp_delivery_company']],
         ];
