@@ -29,9 +29,9 @@ class Erp
         $this->NINETY_DAYS = 89;
         $this->ONE_TWENTY_DAYS = 119;
         $this->PREVIOUS_ONE_YEAR = 1;
-        $this->ERP_REPORT = "erpReport.csv";
-        $this->DETAIL_AGING_REPORT = "detailAgingReport.csv";
-        $this->AGING_REPORT_INTERNAL = "agingReportInternal.csv";
+        $this->ERP_REPORT = "erpReport";
+        $this->DETAIL_AGING_REPORT = "detailAgingReport";
+        $this->AGING_REPORT_INTERNAL = "agingReportInternal";
     }
 
     /**
@@ -144,10 +144,11 @@ class Erp
      * @param $deliveredDate
      * @param $previousDate
      * @param $dataKey
+     * @param $deliveryCompany
      *
      * @return array
      */
-    public function getAgingReport($deliveredDate, $previousDate, $dataKey)
+    public function getAgingReport($deliveredDate, $previousDate, $dataKey, $deliveryCompany)
     {
         return $this->getQueryModel()
             ->select('erp_delivery_company.name as name,
@@ -161,6 +162,7 @@ class Erp
             id_erp_delivery_company_city = erp_delivery_company.fk_erp_delivery_company_city')
             ->where('erp_oms.status=:status', [':status' => $this->STATUS_ACTIVE])
             ->andWhere(['between', 'erp_oms.delivered_date', $deliveredDate, $previousDate])
+            ->andWhere('erp_delivery_company.id_erp_delivery_company=:company', [':company' => $deliveryCompany])
             ->groupBy('erp_oms.tracking_nr')
             ->orderBy('erp_delivery_company.name ASC')->all();
     }
@@ -168,10 +170,11 @@ class Erp
     /**
      * @param $deliveredDate
      * @param $previousDate
+     * @param $deliveryCompany
      *
      * @return array
      */
-    public function getDetailAgingReport($deliveredDate, $previousDate)
+    public function getDetailAgingReport($deliveredDate, $previousDate, $deliveryCompany)
     {
         return $this->getQueryModel()
             ->select('erp_oms.tracking_nr,erp_oms.receivables, 
@@ -186,6 +189,7 @@ class Erp
             ->innerJoin('erp_delivery_company_city', 'erp_delivery_company_city.
             id_erp_delivery_company_city = erp_delivery_company.fk_erp_delivery_company_city')
             ->where(['between', 'erp_oms.delivered_date', $deliveredDate, $previousDate])
+            ->andWhere('erp_delivery_company.id_erp_delivery_company=:company', [':company' => $deliveryCompany])
             ->orderBy('erp_delivery_company.name ASC')
             ->all();
     }
@@ -193,10 +197,11 @@ class Erp
     /**
      * @param $date
      * @param $dataKey
+     * @param $deliveryCompany
      *
      * @return array
      */
-    public function getOldAgingReport($date, $dataKey)
+    public function getOldAgingReport($date, $dataKey, $deliveryCompany)
     {
         return $this->getQueryModel()
             ->select('erp_delivery_company.name as name,
@@ -210,6 +215,7 @@ class Erp
             id_erp_delivery_company_city = erp_delivery_company.fk_erp_delivery_company_city')
             ->where('erp_oms.status=:status', [':status' => $this->STATUS_ACTIVE])
             ->andWhere('erp_oms.delivered_date <=:date', [':date' => $date])
+            ->andWhere('erp_delivery_company.id_erp_delivery_company=:company', [':company' => $deliveryCompany])
             ->groupBy('erp_oms.tracking_nr')
             ->orderBy('erp_delivery_company.name ASC')->all();
     }
@@ -546,6 +552,14 @@ class Erp
     }
 
     /**
+     * @return ErpDeliveryCompany
+     */
+    protected function getErpDeliveryCompanyModel()
+    {
+        return new ErpDeliveryCompany();
+    }
+
+    /**
      * @param $trackingNumber
      *
      * @return number
@@ -716,5 +730,15 @@ class Erp
         }
 
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllDeliveryCompanyIDs()
+    {
+        return $this->getErpDeliveryCompanyModel()->find()
+            ->select('id_erp_delivery_company, name')
+            ->all();
     }
 }
