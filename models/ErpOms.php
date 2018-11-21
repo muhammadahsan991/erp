@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "{{%erp_oms}}".
  *
- * @property int $id_erp_oms
+ * @property string $id_erp_oms
  * @property string $tracking_nr
  * @property int $order_nr
  * @property string $package_nr
