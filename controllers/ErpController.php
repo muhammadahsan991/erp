@@ -27,6 +27,7 @@ class ErpController extends Controller
             $DeliveryCompanyIds = $erpModel->getAllDeliveryCompanyIDs();
             foreach ($DeliveryCompanyIds as $companyIds) {
                 $deliveryCompany = $companyIds->id_erp_delivery_company;
+                $deliveryCompanyName = $companyIds->name;
 
                 $eightDays = $erpModel->getPreviousDays($currentDate, $erpModel->EIGHT_DAYS);
 
@@ -132,7 +133,7 @@ class ErpController extends Controller
 
                     //Create Folder if not Exist
                     $erpModel->createFolderDateWise($erpFolderName);
-                    $erpReportFileName = $erpFolderName . '/' . $erpModel->ERP_REPORT.$deliveryCompany.".csv";
+                    $erpReportFileName = $erpFolderName . '/' . $erpModel->ERP_REPORT.$deliveryCompanyName.".csv";
 
                     try {
                         $file = fopen($erpReportFileName, 'w');
@@ -220,8 +221,8 @@ class ErpController extends Controller
 
                     //Create Folder if not Exist
                     $erpModel->createFolderDateWise($erpFolderName);
-                    $detailAgingReportFileName = $erpFolderName . '/' . $erpModel->DETAIL_AGING_REPORT.$deliveryCompany
-                        .".csv";
+                    $detailAgingReportFileName = $erpFolderName . '/' . $erpModel->DETAIL_AGING_REPORT.
+                        $deliveryCompanyName.".csv";
 
                     try {
                         $detailAgingReportFile = fopen($detailAgingReportFileName, 'w');
@@ -334,7 +335,7 @@ class ErpController extends Controller
                     //Create Folder if not Exist
                     $erpModel->createFolderDateWise($erpFolderName);
                     $agingReportInternalFileName = $erpFolderName . '/' . $erpModel->
-                        AGING_REPORT_INTERNAL.$deliveryCompany.".csv";
+                        AGING_REPORT_INTERNAL.$deliveryCompanyName.".csv";
 
                     try {
                         $agingReportFileInternal = fopen($agingReportInternalFileName, 'w');
