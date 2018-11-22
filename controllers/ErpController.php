@@ -158,11 +158,25 @@ class ErpController extends Controller
 
                     //Create Folder if not Exist
                     $erpModel->createFolderDateWise($erpFolderName);
-                    $erpReportFileName = $erpFolderName . '/' . $erpModel->ERP_REPORT.$deliveryCompanyName.".csv";
+                    $erpReportFileName = $erpFolderName . '/' . $erpModel->ERP_REPORT;
 
                     try {
-                        $file = fopen($erpReportFileName, 'w');
-                        chmod($erpReportFileName, $erpModel->FILE_PERMISSIONS);
+                        if (!file_exists($erpReportFileName)) {
+                            $file = fopen($erpReportFileName, 'w');
+                            chmod($erpReportFileName, $erpModel->FILE_PERMISSIONS);
+                            $erpModel->createAgingReportCsvFileHeader($file, [
+                                'Delivery Company' => 'Company',
+                                '1-8' => '8 Days (' . $eightDays . '-' . $currentDate . ')',
+                                '9-15' => '7 Days (' . $sixDays . '-' . $startDateSixDaysReport . ')',
+                                '16-30' => '15 Days (' . $thirtyDays . '-' . $startDateThirtyDaysReport . ')',
+                                '31-90' => '60 Days (' . $sixtyDays . '-' . $startDateSixtyDaysReport . ')',
+                                '91-180' => '90 Days (' . $ninetyDays . '-' . $startDateNinetyDaysReport . ')',
+                                '181-365' => '180 Days (' . $hundredEightyDays . '-' .
+                                    $startDateOneEightyDaysReport . ')',
+                                'more365' => '> 365 Days',
+                                'Outstanding' => 'Outstanding Amount'
+                            ]);
+                        }
                     } catch (Exception $e) {
                         $erpModel->createLogFile(
                             $erpModel->ERROR_FILE,
@@ -171,19 +185,8 @@ class ErpController extends Controller
                     }
 
                     if (file_exists($erpReportFileName)) {
-                        $erpModel->createAgingReportCsvFileHeader($file, [
-                            'Delivery Company' => 'Company',
-                            '1-8' => '8 Days (' . $eightDays . '-' . $currentDate . ')',
-                            '9-15' => '7 Days (' . $sixDays . '-' . $startDateSixDaysReport . ')',
-                            '16-30' => '15 Days (' . $thirtyDays . '-' . $startDateThirtyDaysReport . ')',
-                            '31-90' => '60 Days (' . $sixtyDays . '-' . $startDateSixtyDaysReport . ')',
-                            '91-180' => '90 Days (' . $ninetyDays . '-' . $startDateNinetyDaysReport . ')',
-                            '181-365' => '180 Days (' . $hundredEightyDays . '-' . $startDateOneEightyDaysReport . ')',
-                            'more365' => '> 365 Days',
-                            'Outstanding' => 'Outstanding Amount'
-                        ]);
-
                         //Creating Aging Report For Outstanding Amount
+                        $file = fopen($erpReportFileName, 'a+');
                         $erpModel->createAgingReportCsvFile($file, $agingReport);
                         fclose($file);
                     }
@@ -339,11 +342,23 @@ class ErpController extends Controller
                     //Create Folder if not Exist
                     $erpModel->createFolderDateWise($erpFolderName);
                     $agingReportInternalFileName = $erpFolderName . '/' . $erpModel->
-                        AGING_REPORT_INTERNAL.$deliveryCompanyName.".csv";
+                        AGING_REPORT_INTERNAL;
 
                     try {
-                        $agingReportFileInternal = fopen($agingReportInternalFileName, 'w');
-                        chmod($agingReportInternalFileName, $erpModel->FILE_PERMISSIONS);
+                        if (!file_exists($agingReportInternalFileName)) {
+                            $agingReportFileInternal = fopen($agingReportInternalFileName, 'w');
+                            chmod($agingReportInternalFileName, $erpModel->FILE_PERMISSIONS);
+                            $erpModel->createAgingReportInternalCsvFileHeader($agingReportFileInternal, [
+                                'Delivery Company' => 'Company',
+                                '1-60' => '60 Days (' . $sixtyDaysInternal . '-' . $currentDate . ')',
+                                '61-180' => '120 Days (' . $oneTwentyDaysInternal . '-'
+                                    . $startDateSixtyDaysReportInternal . ')',
+                                '181-365' => '180 Days (' . $previousYear . '-' .
+                                    $startDateOneEightyDaysReportInternal . ')',
+                                'more365' => '> 365 Days',
+                                'Outstanding' => 'Outstanding Amount'
+                            ]);
+                        }
                     } catch (Exception $e) {
                         $erpModel->createLogFile(
                             $erpModel->ERROR_FILE,
@@ -352,18 +367,8 @@ class ErpController extends Controller
                     }
 
                     if (file_exists($agingReportInternalFileName)) {
-                        $erpModel->createAgingReportInternalCsvFileHeader($agingReportFileInternal, [
-                            'Delivery Company' => 'Company',
-                            '1-60' => '60 Days (' . $sixtyDaysInternal . '-' . $currentDate . ')',
-                            '61-180' => '120 Days (' . $oneTwentyDaysInternal . '-'
-                                . $startDateSixtyDaysReportInternal . ')',
-                            '181-365' => '180 Days (' . $previousYear . '-' .
-                                $startDateOneEightyDaysReportInternal . ')',
-                            'more365' => '> 365 Days',
-                            'Outstanding' => 'Outstanding Amount'
-                        ]);
-
                         //Creating Aging Report For Internal Use of Outstanding Amount
+                        $agingReportFileInternal = fopen($agingReportInternalFileName, 'a+');
                         $erpModel->createAgingReportCsvFileInternal($agingReportFileInternal, $agingReportInternal);
                         fclose($agingReportFileInternal);
                     }

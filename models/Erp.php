@@ -29,9 +29,9 @@ class Erp
         $this->NINETY_DAYS = 89;
         $this->ONE_TWENTY_DAYS = 119;
         $this->PREVIOUS_ONE_YEAR = 1;
-        $this->ERP_REPORT = "erpReport";
+        $this->ERP_REPORT = "erpReport.csv";
         $this->DETAIL_AGING_REPORT = "detailAgingReport";
-        $this->AGING_REPORT_INTERNAL = "agingReportInternal";
+        $this->AGING_REPORT_INTERNAL = "agingReportInternal.csv";
     }
 
     /**
