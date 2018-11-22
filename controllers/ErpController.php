@@ -25,36 +25,61 @@ class ErpController extends Controller
         if ($erpReceiptsData && $erpOmsData) {
 
             $DeliveryCompanyIds = $erpModel->getAllDeliveryCompanyIDs();
+
+            //Days Calculation for ErpReport.csv
+            $eightDays = $erpModel->getPreviousDays($currentDate, $erpModel->EIGHT_DAYS);
+
+            //For 6 Days Aging Report
+            $startDateSixDaysReport = $erpModel->getPreviousDays($eightDays, $erpModel->ONE_DAY);
+            $sixDays = $erpModel->getPreviousDays($startDateSixDaysReport, $erpModel->SIX_DAYS);
+
+            //For 30 Days Aging Report
+            $startDateThirtyDaysReport = $erpModel->getPreviousDays($sixDays, $erpModel->ONE_DAY);
+            $thirtyDays = $erpModel->getPreviousDays($startDateThirtyDaysReport, $erpModel->FIFTEEN_DAYS);
+
+            //For 60 Days Aging Report
+            $startDateSixtyDaysReport = $erpModel->getPreviousDays($thirtyDays, $erpModel->ONE_DAY);
+            $sixtyDays = $erpModel->getPreviousDays($startDateSixtyDaysReport, $erpModel->SIXTY_DAYS);
+
+            //For 90 Days Aging Report
+            $startDateNinetyDaysReport = $erpModel->getPreviousDays($sixtyDays, $erpModel->ONE_DAY);
+            $ninetyDays = $erpModel->getPreviousDays($startDateNinetyDaysReport, $erpModel->NINETY_DAYS);
+
+            //For 180 Days Aging Report
+            $startDateOneEightyDaysReport = $erpModel->getPreviousDays($ninetyDays, $erpModel->ONE_DAY);
+            $hundredEightyDays = $erpModel->getPreviousYear($currentDate, $erpModel->ONE_DAY);
+
+            $previousYear = $erpModel->getPreviousYear($currentDate, $erpModel->PREVIOUS_ONE_YEAR);
+
+            //For days above one year
+            $greaterThanThreeSixFive = $erpModel->getPreviousDays($previousYear, $erpModel->ONE_DAY);
+
+            //Days Calculation for AgingReportInternal.csv
+
+            //60 Days for internal aging report
+            $sixtyDaysInternal = $erpModel->getPreviousDays($currentDate, $erpModel->SIXTY_DAYS);
+
+            //For 120 Days Aging Report
+            $startDateSixtyDaysReportInternal = $erpModel->getPreviousDays($sixtyDaysInternal, $erpModel->ONE_DAY);
+            $oneTwentyDaysInternal = $erpModel->getPreviousDays(
+                $startDateSixtyDaysReportInternal,
+                $erpModel->ONE_TWENTY_DAYS
+            );
+
+            //For previous Days to current date previous year
+            $startDateOneEightyDaysReportInternal = $erpModel->getPreviousDays(
+                $oneTwentyDaysInternal,
+                $erpModel->ONE_DAY
+            );
+
+            //For days above one year
+            $oldDate = $erpModel->getPreviousDays($previousYear, $erpModel->ONE_DAY);
+
             foreach ($DeliveryCompanyIds as $companyIds) {
+
                 $deliveryCompany = $companyIds->id_erp_delivery_company;
+
                 $deliveryCompanyName = $companyIds->name;
-
-                $eightDays = $erpModel->getPreviousDays($currentDate, $erpModel->EIGHT_DAYS);
-
-                //For 6 Days Aging Report
-                $startDateSixDaysReport = $erpModel->getPreviousDays($eightDays, $erpModel->ONE_DAY);
-                $sixDays = $erpModel->getPreviousDays($startDateSixDaysReport, $erpModel->SIX_DAYS);
-
-                //For 30 Days Aging Report
-                $startDateThirtyDaysReport = $erpModel->getPreviousDays($sixDays, $erpModel->ONE_DAY);
-                $thirtyDays = $erpModel->getPreviousDays($startDateThirtyDaysReport, $erpModel->FIFTEEN_DAYS);
-
-                //For 60 Days Aging Report
-                $startDateSixtyDaysReport = $erpModel->getPreviousDays($thirtyDays, $erpModel->ONE_DAY);
-                $sixtyDays = $erpModel->getPreviousDays($startDateSixtyDaysReport, $erpModel->SIXTY_DAYS);
-
-                //For 90 Days Aging Report
-                $startDateNinetyDaysReport = $erpModel->getPreviousDays($sixtyDays, $erpModel->ONE_DAY);
-                $ninetyDays = $erpModel->getPreviousDays($startDateNinetyDaysReport, $erpModel->NINETY_DAYS);
-
-                //For 180 Days Aging Report
-                $startDateOneEightyDaysReport = $erpModel->getPreviousDays($ninetyDays, $erpModel->ONE_DAY);
-                $hundredEightyDays = $erpModel->getPreviousYear($currentDate, $erpModel->ONE_DAY);
-
-                $previousYear = $erpModel->getPreviousYear($currentDate, $erpModel->PREVIOUS_ONE_YEAR);
-
-                //For days above one year
-                $greaterThanThreeSixFive = $erpModel->getPreviousDays($previousYear, $erpModel->ONE_DAY);
 
                 //8 Days Aging Report Outstanding Amount
                 $erpReportEight = $erpModel->getAgingReport($eightDays, $currentDate, 'a', $deliveryCompany);
@@ -256,27 +281,6 @@ class ErpController extends Controller
                         fclose($detailAgingReportFile);
                     }
                 }
-
-                //Aging Report For Internal
-
-                //60 Days for internal aging report
-                $sixtyDaysInternal = $erpModel->getPreviousDays($currentDate, $erpModel->SIXTY_DAYS);
-
-                //For 120 Days Aging Report
-                $startDateSixtyDaysReportInternal = $erpModel->getPreviousDays($sixtyDaysInternal, $erpModel->ONE_DAY);
-                $oneTwentyDaysInternal = $erpModel->getPreviousDays(
-                    $startDateSixtyDaysReportInternal,
-                    $erpModel->ONE_TWENTY_DAYS
-                );
-
-                //For previous Days to current date previous year
-                $startDateOneEightyDaysReportInternal = $erpModel->getPreviousDays(
-                    $oneTwentyDaysInternal,
-                    $erpModel->ONE_DAY
-                );
-
-                //For days above one year
-                $oldDate = $erpModel->getPreviousDays($previousYear, $erpModel->ONE_DAY);
 
                 //First 60 Days Internal Aging Report
                 $erpReportSixtyInternal = $erpModel->getAgingReport(
